@@ -1,13 +1,10 @@
 package com.dayone;
 
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+import com.dayone.scraper.NaverFinanceScraper;
+import com.dayone.scraper.Scraper;
+import com.dayone.scraper.YahooFinanceScraper;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.io.IOException;
 
 
 //TIP 코드를 <b>실행</b>하려면 <shortcut actionId="Run"/>을(를) 누르거나
@@ -15,11 +12,11 @@ import java.io.IOException;
 @SpringBootApplication
 public class Application {
     public static void main(String[] args) {
-        //SpringApplication.run(Application.class, args);
+        SpringApplication.run(Application.class, args);
 
         //웹사이트에 요청보내서 html문서받아오기
 
-        try {
+/*        try {
             Connection connection = Jsoup.connect("https://finance.yahoo.com/quote/COKE/history/?frequency=1mo&period1=99153000&period2=1727864586&filter=history")
                     .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
             Document document = connection.get();
@@ -46,7 +43,38 @@ public class Application {
 
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
+
+//        String s = "Hello my name is %s";
+//
+//        String[] names = {"GREEN", "RED", "BANANA"};
+//
+//        for (String name : names) {
+//            System.out.println(String.format(s,name));
+//        }
+
+        //1970년부터 발생한 시간을 밀리세컨드로 가져온값
+        // System.out.println(System.currentTimeMillis());
+
+        /*
+        스크랩1테스트
+        YahooFinanceScraper scraper = new YahooFinanceScraper();
+        var result = scraper.scrap(Company.builder().ticker("O").build());
+
+        System.out.println(result);
+*/
+
+        //스크랩2테스트
+//        YahooFinanceScraper scraper = new YahooFinanceScraper();
+//        var result = scraper.scrapCompanyByTicker("MMM");
+//        System.out.println(result);
+
+        //인터페이스로 코드 분리
+
+        //Scraper scraper1 = new YahooFinanceScraper();
+        //Scraper scraper2 = new NaverFinanceScraper();
+
+
 
 
     }
