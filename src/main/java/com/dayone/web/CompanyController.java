@@ -1,11 +1,16 @@
 package com.dayone.web;
 
 import com.dayone.model.Company;
+import com.dayone.persist.entity.CompanyEntity;
 import com.dayone.service.CompanyService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/company") //경로에 공통되는 부분은 빼줌
@@ -22,10 +27,17 @@ public class CompanyController {
 
     //회사 리스트 조회 API
     @GetMapping
-    public ResponseEntity<?> searchCompany() {
-        return null;
+    public ResponseEntity<?> searchCompany(final Pageable pageable) {  //페이져블 넘겨주기..페이지 기능 지원 숫자 고정 final
+        Page<CompanyEntity> companies = this.companyService.getAllCompany(pageable);
+        return ResponseEntity.ok(companies);
     }
 
+
+    /**
+     * 회사 및 배당금 정보 추가
+     * @param request
+     * @return
+     */
     //배당금 데이터 저장, 삭제 API
     @PostMapping
     public ResponseEntity<?> addCompany(@RequestBody Company request) {
