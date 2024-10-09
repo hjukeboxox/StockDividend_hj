@@ -5,11 +5,13 @@ import com.dayone.scraper.Scraper;
 import com.dayone.scraper.YahooFinanceScraper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 
 //TIP 코드를 <b>실행</b>하려면 <shortcut actionId="Run"/>을(를) 누르거나
 // 에디터 여백에 있는 <icon src="AllIcons.Actions.Execute"/> 아이콘을 클릭하세요.
 @SpringBootApplication
+@EnableScheduling
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
@@ -75,6 +77,19 @@ public class Application {
         //Scraper scraper2 = new NaverFinanceScraper();
 
 
+//스레드 슬립 테스트
+       /*
+        for (int i = 0; i < 10; i++) {
+            System.out.println("HELLO ->" + i);
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+*/
+
+        //System.out.println("Main->"+Thread.currentThread().getName());
 
 
     }
