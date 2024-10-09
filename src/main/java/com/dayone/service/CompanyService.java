@@ -8,7 +8,9 @@ import com.dayone.persist.entity.CompanyEntity;
 import com.dayone.persist.entity.DividendEntity;
 import com.dayone.scraper.Scraper;
 import lombok.AllArgsConstructor;
+import org.apache.commons.collections4.Trie;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -18,8 +20,10 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class CompanyService {
+public class CompanyService {//스프링 서비스 -> 싱글톤 // 프로그램이 실행되는동안 한개의 인스턴스만 생성해서 사용함.
 
+    //trie사용
+    private final Trie trie;
     //빈으로 선언해서 사용할거라 @Component 붙임
     private final Scraper yahooFinanceScraper;
     private final CompanyRepository companyRepository;
@@ -64,4 +68,30 @@ public class CompanyService {
 
         return company;
     }
+
+    public List<String> getCompanyNameByKeyword(String keyword) {
+        Pageable limit = PageRequest.of(0,10);
+        Page<CompanyEntity> companyEntities=this.companyRepository.findByNameStartingWithIgnoreCase(keyword, limit);
+        return companyEntities.stream()
+                .map(e->e.getName())
+                .collect(Collectors.toList());
+    }
+
+    public void addAutocompleteKeyword(String keyword) {
+        this.trie.put(keyword, null);
+        //아파치에서 구현된 trie는 다른기능지원때문에 키 벨류 저장할수있도록 만들어짐.. 근데 굳이 안필요해서 null처리
+
+    }
+
+    public List<String> autocomplete(String keyword) {
+        return (List<String>) this.trie.prefixMap(keyword).keySet()
+                .stream()
+                .limit(10)
+                .collect(Collectors.toList());
+    }
+
+    public void deleteAutocompleteKeyword(String keyword) {
+        this.trie.remove(keyword);
+    }
+
 }

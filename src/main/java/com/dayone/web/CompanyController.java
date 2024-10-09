@@ -10,8 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/company") //경로에 공통되는 부분은 빼줌
 @AllArgsConstructor
@@ -22,7 +20,9 @@ public class CompanyController {
     //배당금 자동완성 API
     @GetMapping("/autocomplete")
     public ResponseEntity<?> autocomplete(@RequestParam String keyword) {
-        return null;
+        //var result = this.companyService.autocomplete(keyword);
+        var result = this.companyService.getCompanyNameByKeyword(keyword);
+        return ResponseEntity.ok(result);
     }
 
     //회사 리스트 조회 API
@@ -35,6 +35,7 @@ public class CompanyController {
 
     /**
      * 회사 및 배당금 정보 추가
+     *
      * @param request
      * @return
      */
@@ -47,6 +48,7 @@ public class CompanyController {
         }
 
         Company company = this.companyService.save(ticker);
+        this.companyService.addAutocompleteKeyword(company.getName());
         return ResponseEntity.ok(company);
     }
 
