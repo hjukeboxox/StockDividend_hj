@@ -94,4 +94,18 @@ public class CompanyService {//스프링 서비스 -> 싱글톤 // 프로그램�
         this.trie.remove(keyword);
     }
 
+    public String deleteCompany(String ticker) {
+    var company = this.companyRepository.findByTicker(ticker)
+            .orElseThrow(()-> new RuntimeException("존재하지 않는 회사입니다."));
+
+    //배당금 데이터 지우기
+    this.dividendRepository.deleteAllByCompanyId(company.getId());
+    this.companyRepository.delete(company);
+
+    //trie에서도 지워지도록
+    this.deleteAutocompleteKeyword(company.getName());
+
+
+        return company.getName();
+    }
 }
