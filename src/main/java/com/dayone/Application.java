@@ -5,6 +5,8 @@ import com.dayone.scraper.Scraper;
 import com.dayone.scraper.YahooFinanceScraper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 
@@ -12,6 +14,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 // 에디터 여백에 있는 <icon src="AllIcons.Actions.Execute"/> 아이콘을 클릭하세요.
 @SpringBootApplication
 @EnableScheduling
+@EnableCaching
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
