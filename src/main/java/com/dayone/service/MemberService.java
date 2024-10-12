@@ -1,5 +1,6 @@
 package com.dayone.service;
 
+import com.dayone.exception.impl.AlreadyExistUserException;
 import com.dayone.model.Auth;
 import com.dayone.model.MemberEntity;
 import com.dayone.persist.MemberRepository;
@@ -10,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.rmi.AlreadyBoundException;
 
 @Slf4j
 @Service
@@ -29,13 +32,13 @@ public class MemberService implements UserDetailsService {
     public MemberEntity register(Auth.SignUp member) {
         boolean exists = this.memberRepository.existsByUsername(member.getUsername());
         if (exists) {
-            throw new RuntimeException("이미 사용중인 아이디 입니다.");
+            throw new AlreadyExistUserException();
         }
 
         //암호화해서PasswordEncoder DB에 넣기
         member.setPassword(this.passwordEncoder.encode(member.getPassword()));
         //패스워드를 인코딩한 값을 set해줌
-        MemberEntity result = this.memberRepository.save(member.toEntity());
+        var result = this.memberRepository.save(member.toEntity());
         return result;
     }
 
@@ -43,7 +46,7 @@ public class MemberService implements UserDetailsService {
         var user = this.memberRepository.findByUsername(member.getUsername())
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 ID입니다."));
 
-        if (this.passwordEncoder.matches(member.getPassword(), user.getPassword())) {
+        if (!this.passwordEncoder.matches(member.getPassword(), user.getPassword())) {
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");
         }
 

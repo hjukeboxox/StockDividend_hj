@@ -32,7 +32,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/**/sighup","/**/signin").permitAll() //토큰없어도 접근가능해야하는 경로
+                .antMatchers("/**/signup","/**/signin").permitAll() //토큰없어도 접근가능해야하는 경로
                 //.antMatchers("").hasRole() //특정권한가진사람 선별
                 .and()
                 .addFilterBefore(this.authenticationFilter, UsernamePasswordAuthenticationFilter.class);

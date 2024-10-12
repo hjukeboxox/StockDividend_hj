@@ -66,6 +66,7 @@ public class ScraperScheduler {
                         boolean exists = this.dividendRepository.existsByCompanyIdAndDate(e.getCompanyId(), e.getDate());
                         if (!exists) {
                             this.dividendRepository.save(e);
+                            log.info("insert new dividend -> "+ e.toString());
                         }
                     });
             //회사의 갯수만큼.. 서버에 api요청날리게되서 부하가 가게됨. -> 포문을 한번 돌떄마다 스레드 슬립을 걸어서 일시정지 시켜주기.

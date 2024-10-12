@@ -5,10 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +26,11 @@ public class MemberEntity implements UserDetails { // 시큐리티에서 지원�
     private String username;
     private String password;
 
-    private List<String> roles; //권한으 여러개 가질수있어서 리스트
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "member_roles", joinColumns = @JoinColumn(name = "member_id"))
+    @Column(name = "role")
+    private List<String> roles;
+    //권한으 여러개 가질수있어서 리스트
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
