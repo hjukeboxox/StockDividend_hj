@@ -8,13 +8,13 @@
 
 
 ### API 리스트
-1.GET - finance/dividend/{companyName}
-2.GET - company/autocomplete
-3.GET - company
-4.POST - company
-5.DELETE - company/{ticker}
-6.POST - auth/signup
-7.POST - auth/signin
+1. GET - finance/dividend/{companyName}
+2. GET - company/autocomplete
+3. GET - company
+4. POST - company
+5. DELETE - company/{ticker}
+6. POST - auth/signup
+7. POST - auth/signin
 
 spring boot 로 프로젝트 세팅하기 (완료)
 h2 인메모리 데이터베이스 연동하기 (완료)
