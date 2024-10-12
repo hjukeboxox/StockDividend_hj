@@ -21,8 +21,8 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    public static final String TOKEN_HEADER ="Authorization";
-    public static final String TOKEN_PREFIX ="Bearer ";
+    public static final String TOKEN_HEADER = "Authorization";
+    public static final String TOKEN_PREFIX = "Bearer ";
 
     private final TokenProvider tokenProvider;
 
@@ -32,11 +32,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = this.resolveTokenFromRequest(request);
         //토큰 유효성 검증
-        if (StringUtils.hasText(token)&& this.tokenProvider.validateToken(token)){
+        if (StringUtils.hasText(token) && this.tokenProvider.validateToken(token)) {
 
             //시큐리티에다가 인증정보 넣기
             Authentication auth = this.tokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(auth);
+            //어떤사용자가 어떤경로에 접근했는지에대한 기록
+            log.info(String.format("[%s] -> %s", this.tokenProvider.getUsername(token), request.getRequestURI()));
+
         }
         filterChain.doFilter(request, response);
     }
@@ -48,7 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return token.substring(TOKEN_PREFIX.length());
         }
 
-        return  null;
+        return null;
     }
 
 

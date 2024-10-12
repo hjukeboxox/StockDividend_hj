@@ -1,5 +1,6 @@
 package com.dayone.service;
 
+import com.dayone.exception.impl.NoCompanyException;
 import com.dayone.model.Company;
 import com.dayone.model.Dividend;
 import com.dayone.model.ScrapedResult;
@@ -39,7 +40,7 @@ public class FinanceService {
 
         //1. 회사명을 기준으로 회사 정보를 조회. 주식정보는 특정정보에 대한 검색조회가 몰리는편.. 주요 주식같은경우는... 많은
         CompanyEntity company = this.companyRepository.findByName(companyName)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 회사명입니다."));
+                .orElseThrow(() -> new NoCompanyException());
 //값이 없는경우 예외발생시켜줌 .orElseThrow... 널처리와는 다름. 옵셔널이 벗겨진 알맹이를 뱉음.
 
         //2. 조회된 회사 ID로 배당금 정보 조회

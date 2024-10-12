@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="LOG_DIR" value="./"/>
+    <property name="LOG_FILE_NAME" value="mylog"/>
+
+<!--콘솔에보여질    -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern> %d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) %magenta(%-4relative) --- [ %thread{10} ] %cyan(%logger{20}) : %msg%n </pattern>
+        </encoder>
+    </appender>
+
+<!--    파일에 보여질-->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/${LOG_FILE_NAME}.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+<!--       로그 경로-->
+        <fileNamePattern>${LOG_DIR}/${LOG_FILE_NAME}-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+        <maxFileSize>10MB</maxFileSize>
+<!--        최대30일보관-->
+        <maxHistory>30</maxHistory>
+    </rollingPolicy>
+    <encoder>
+        <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+    </appender>
+
+<!--    각 패키지별로 어떤 로그레벨을 남길건지-->
+    <logger name="org.springframework" lever="info"/>
+    <logger name="org.hibernate" lever="info"/>
+<!--    루트는 콘솔과 파일다 남김-->
+    <root level="info">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration>

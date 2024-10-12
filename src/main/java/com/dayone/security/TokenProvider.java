@@ -1,11 +1,11 @@
 package com.dayone.security;
 
 import com.dayone.service.MemberService;
-import io.jsonwebtoken.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -30,18 +30,19 @@ public class TokenProvider {
 
     /**
      * 토큰 생성(발급)
+     *
      * @param username
      * @param roles
      * @return
      */
     public String generateToken(String username, List<String> roles) {
         //사용자의 권한정보를 저장하는 클래임생성
-        Claims claims= Jwts.claims().setSubject(username);
+        Claims claims = Jwts.claims().setSubject(username);
         //클래임 저장시 키벨류로 저장
         claims.put(KEY_ROLES, roles);
         //토큰생성시간
 
-        var now= new Date();
+        var now = new Date();
         //토큰만료시간
         var expiredDate = new Date(now.getTime() + TOKEN_EXPIRE_TIME);
 
@@ -49,15 +50,15 @@ public class TokenProvider {
                 .setClaims(claims) //사용자 정보
                 .setIssuedAt(now) //토큰 생성 시간
                 .setExpiration(expiredDate) //토큰만료시간
-                .signWith(SignatureAlgorithm.ES512,this.secretKey) //사용할 암호화 알고리즘, 비밀키
+                .signWith(SignatureAlgorithm.HS512, this.secretKey) //사용할 암호화 알고리즘, 비밀키
                 .compact();
 
     }
 
     public Authentication getAuthentication(String jwt) {
         //jwt 토큰에서 인증정보 가져오는
-        UserDetails userDetails =this.memberService.loadUserByUsername(this.getUsername(jwt));
-        return new UsernamePasswordAuthenticationToken(userDetails,"",userDetails.getAuthorities());
+        UserDetails userDetails = this.memberService.loadUserByUsername(this.getUsername(jwt));
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
 
@@ -69,7 +70,7 @@ public class TokenProvider {
         if (!StringUtils.hasText(token)) return false;
 
         var claims = this.parseClaims(token);
-        return claims.getExpiration().before(new Date());
+        return !claims.getExpiration().before(new Date());
     }
 
 
@@ -77,7 +78,7 @@ public class TokenProvider {
     private Claims parseClaims(String token) {
         try {
             return Jwts.parser().setSigningKey(this.secretKey).parseClaimsJws(token).getBody();
-        }catch (ExpiredJwtException e) {
+        } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
     }

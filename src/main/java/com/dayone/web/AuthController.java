@@ -24,7 +24,7 @@ public class AuthController {
     public ResponseEntity<?> signup(@RequestBody Auth.SignUp request) {
         //회원가입을 위한 API
 
-        var result =this.memberService.register(request);
+        var result = this.memberService.register(request);
         return ResponseEntity.ok(result);
     }
 
@@ -33,9 +33,10 @@ public class AuthController {
         //로그인용 API
         //1. 유저일치 검증
         var member = this.memberService.authenticate(request);
-
+        //어떤사용자가 로그인했는지 기록
+        log.info("user login -> " + request.getUsername());
         //2. 토큰생성하여 반환하기
-        var token=this.tokenProvider.generateToken(member.getUsername(), member.getRoles());
+        var token = this.tokenProvider.generateToken(member.getUsername(), member.getRoles());
         return ResponseEntity.ok(token);
     }
 
