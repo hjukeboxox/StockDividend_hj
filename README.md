@@ -31,6 +31,6 @@
 -적합한 로그레벨로 필요한 로그 남기기 (완료)
 -ControllerAdvice 에서 에러 처리하기 (완료)
 
-![Image1](C:\Users\ghd51\Desktop\배당금프로젝트\2.png)
-![Image2](C:\Users\ghd51\Desktop\배당금프로젝트\3.png)
-![Image3](C:\Users\ghd51\Desktop\배당금프로젝트\4.png)
+![Image1](./2.png)
+![Image2](./3.png)
+![Image3](./4.png)
